@@ -1,0 +1,20 @@
+<ion-view title="Customer List" id="page1" style="" cache-view="false">
+  <ion-nav-buttons side="right" class="has-header">
+    <button class="button button-balanced icon ion-android-add" ng-click="createCustomer()"></button>
+  </ion-nav-buttons>
+  <ion-content padding="false" class=" manual-remove-top-padding has-header">
+    <ion-refresher
+      pulling-text="Pull to refresh..."
+      on-refresh="refreshCustomer()">
+    </ion-refresher>
+    <ion-list id="customerList-list1">
+      <ion-item class="item-icon-right" ng-repeat="customer in customers" style="" ng-click="editCustomer(customer.id)">
+        <h2>{{customer.name}}</h2>
+        <p>{{customer.email}} | {{customer.mobile}}</p>
+        <i class="icon ion-edit icon-accessory"></i>
+        <ion-option-button class="button-assertive" ng-click="deleteCustomer(customer.id)">delete</ion-option-button>
+        <ion-option-button class="button-royal" ng-click="addCustomerContact(customer.id)">add contact</ion-option-button>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

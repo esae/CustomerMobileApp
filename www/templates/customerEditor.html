@@ -1,0 +1,21 @@
+<ion-view title="Customer Editor" id="page2" style="">
+  <ion-content padding="true" class="has-header">
+    <form id="customerEditor-form1" class="list">
+      <ion-list id="customerEditor-list2">
+        <label class="item item-input" id="customerEditor-input1">
+          <span class="input-label">Name</span>
+          <input placeholder="" type="text" ng-model="customer.name">
+        </label>
+        <label class="item item-input" id="customerEditor-input2">
+          <span class="input-label">Email</span>
+          <input placeholder="" type="email" ng-model="customer.email">
+        </label>
+        <label class="item item-input" id="customerEditor-input3">
+          <span class="input-label">Mobile</span>
+          <input placeholder="" type="tel" ng-model="customer.mobile">
+        </label>
+      </ion-list>
+      <button id="customerEditor-button1" class="button button-balanced  button-block" ng-click="editCustomer()">Save</button>
+    </form>
+  </ion-content>
+</ion-view>

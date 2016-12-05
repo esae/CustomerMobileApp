@@ -2,7 +2,7 @@
 ## Pre-requisites
 ### Ionic (and Cordova)
 1.  Register for an Ionic ID / Account: https://apps.ionic.io/signup
-2.  Download and install the Ionic LAB: http://lab.ionic.io/
+2.  Download and install the Ionic LAB (old<sup id="f1r">[1](#f1)</sup>): http://lab.ionic.io/old.html
 3.  Install the Ionic View App on your Android or iOS powered Smartphone or Tablet: http://view.ionic.io/
 
 ### API Development
@@ -123,7 +123,7 @@
     }
     ````
     
-7.  (optional for development purposes) Implement a CORS<sup id="f1r">[1](#f1)</sup> filter as follows:
+7.  (optional for development purposes) Implement a CORS<sup id="f2r">[2](#f2)</sup> filter as follows:
     ````java
     @Provider
     public class CORSFilter implements ContainerResponseFilter{
@@ -148,33 +148,56 @@
     
 ## Ionic App Prototyping
 We are going to use the Ionic Creator prototyping tool to create our development-ready HTML5 code.
-1.  Go to 
-http://ionic.io/products/creator
+
+1.  Login to the Ionic Creator using your Ionic ID: http://ionic.io/products/creator
+2.  Create a blank Ionic App project.
+3.  Create two pages as showed below:
+    - Customer List (left screenshot):
+        - Add a list with list items including "add contact" and "delete" swipe buttons.
+        - Add a create button
+    - Customer Editor (right screenshot): 
+        - Add a form containing input fields for name, email and mobile.
+        - Add a "Save" button.
     
-![](doc/img/2016-12-05_19h21_20.png)
-![](doc/img/2016-12-05_19h22_45.png)
+    ![](doc/img/2016-12-05_19h21_20.png)
+    ![](doc/img/2016-12-05_19h22_45.png)
 
-![](doc/img/2016-12-05_19h24_48.png)
-![](doc/img/2016-12-05_19h25_35.png)
+4.  Make sure that you configure the Customer List (left) and the Customer Editor (right) as follows:  
 
-## Project creation
-Project creation using Ionic Lab and Ionic Creator files...
-1.  Externalize the CSS code
+    ![](doc/img/2016-12-05_19h24_48.png)
+    ![](doc/img/2016-12-05_19h25_35.png)
+
+5.  Export the project from the Ionic Creator.
+6.  Download and extract the ZIP file.
+
+## Ionic project creation
+1.  Create a new Ionic App using Ionic Lab.
+2.  Copy the project files from the Ionic Creator in the www folder.
+3.  Run the embedded Ionic web-server (testing -> serve).
+
+## Ionic App Development using AngularJS 1
+-   Open the Ionic Project in an IDE you prefer (NetBeans, IntelliJ, WebStorm, etc.)
+#### index.html
+1.  Add the Angular resource module which is not included by default. Open index.html and add a script tag to include angular-resource.min.js (right after ionic-bundle.js):
+    ```html
+     <script src="lib/ionic/js/angular/angular-resource.min.js"></script>
+    ```
+    
+2.  Externalize the CSS code and remove it from index.html
     ```html
     <link href="css/style.css" rel="stylesheet">
     ```
-## Services
-1.  The starter.services module you just created has a dependency on the Angular resource module which is not included by default. Open index.html and add a script tag to include angular-resource.min.js (right after ionic-bundle.js):
-    ```html
-    <script src="lib/ionic/js/angular/angular-resource.min.js"></script>
-    ```
-2.  Implement two service factories
+       
+#### services.js
+-  Implement two service factories to consume the Customer API
     ```javascript
+    angular.module('app.services', ['ngResource'])
+    
       .constant('ApiEndpoint', {
         url: 'http://api-andreasmartin.rhcloud.com/api'
       })
     
-      .factory('CustomersFactory', function ($resource) {
+      .factory('CustomersFactory', function ($resource, ApiEndpoint) {
         return $resource(ApiEndpoint.url + '/v1/customer', {}, {
           query: {method: 'GET', isArray: true},
           update: {method: 'PUT'},
@@ -182,15 +205,203 @@ Project creation using Ionic Lab and Ionic Creator files...
         })
       })
     
-      .factory('CustomerFactory', function ($resource) {
+      .factory('CustomerFactory', function ($resource, ApiEndpoint) {
         return $resource(ApiEndpoint.url + '/v1/customer/:id', {}, {
           show: {method: 'GET'},
           delete: {method: 'DELETE', params: {id: '@id'}}
         })
       });
     ```
-## Controllers
-1.  Implement controllers
+
+#### controllers.js
+1.  Implement three controllers for (1) the customer list, (2) updating and (3) creating a customer.
+    ````javascript
+    angular.module('app.controllers', [])
+    ````
+    
+2.  Customer List Controller
+    ````javascript
+      .controller('customerListCtrl', ['$scope', '$stateParams', '$state', 'CustomersFactory', 'CustomerFactory',
+        function ($scope, $stateParams, $state, CustomersFactory, CustomerFactory) {
+          /* callback for ng-click 'editCustomer': */
+          $scope.editCustomer = function (customerId) {
+            $state.go('customerEditor', {customerId: customerId});
+          };
+    
+          /* callback for ng-click 'deleteCustomer': */
+          $scope.deleteCustomer = function (customerId) {
+            CustomerFactory.delete({id: customerId});
+            $scope.customers = CustomersFactory.query();
+            $state.reload();
+          };
+    
+          /* callback for ng-click 'createCustomer': */
+          $scope.createCustomer = function () {
+            $state.go('customerEditorCreate');
+          };
+    
+          /* callback ion-refresher: */
+          $scope.refreshCustomer = function () {
+            $scope.customers = CustomersFactory.query();
+            $scope.$broadcast('scroll.refreshComplete');
+          };
+    
+          $scope.customers = CustomersFactory.query();
+    
+          /* callback for ng-click 'addCustomerContact': */
+          $scope.addCustomerContact = function (customerId) {
+            CustomerFactory.show({id: customerId}).$promise.then(function (customer) {/*...*/});
+          };
+    
+        }])
+    ````
+    
+3.  Customer Editor Controller
+    ````javascript
+      .controller('customerEditorCtrl', ['$scope', '$stateParams', '$state', 'CustomersFactory', 'CustomerFactory',
+        function ($scope, $stateParams, $state, CustomersFactory, CustomerFactory) {
+    
+          /* callback for ng-click 'editCustomer': */
+          $scope.editCustomer = function () {
+            CustomersFactory.update($scope.customer);
+            $state.go('customerList', {}, {reload: true});
+          };
+    
+          $scope.customer = CustomerFactory.show({id: $stateParams.customerId});
+    
+        }])
+    ````
+    
+4.  Customer Editor Create Controller for the creation view. 
+    ````javascript
+      .controller('customerEditorCreateCtrl', ['$scope', '$stateParams', '$state', 'CustomersFactory', 'CustomerFactory',
+        function ($scope, $stateParams, $state, CustomersFactory, CustomerFactory) {
+    
+          /* callback for ng-click 'editCustomer': */
+          $scope.editCustomer = function () {
+            CustomersFactory.create($scope.customer);
+            $state.go('customerList', {}, {reload: true});
+          };
+    
+          $scope.customer = {};
+    
+        }]);
+    ````
+
+#### routes.js
+-   Extend the routes.js file with an customerId URL segment and an additional route for the customer creation view.
+    ````javascript
+    angular.module('app.routes', [])
+    
+      .config(function ($stateProvider, $urlRouterProvider) {
+    
+        $stateProvider
+    
+          .state('customerList', {
+            url: '/customers',
+            templateUrl: 'templates/customerList.html',
+            controller: 'customerListCtrl'
+          })
+    
+          .state('customerEditor', {
+            url: '/editor/:customerId',
+            templateUrl: 'templates/customerEditor.html',
+            controller: 'customerEditorCtrl'
+          })
+    
+          .state('customerEditorCreate', {
+            url: '/editor',
+            templateUrl: 'templates/customerEditor.html',
+            controller: 'customerEditorCreateCtrl'
+          });
+    
+        $urlRouterProvider.otherwise('/customers')
+    
+      });
+    ````
+
+#### customerList.html
+Extend the customer list file with ng-click, ng-repeat, model data and an ion-refresher.
+
+````html
+<ion-view title="Customer List" id="page1" style="" cache-view="false">
+  <ion-nav-buttons side="right" class="has-header">
+    <button class="button button-balanced icon ion-android-add" ng-click="createCustomer()"></button>
+  </ion-nav-buttons>
+  <ion-content padding="false" class=" manual-remove-top-padding has-header">
+    <ion-refresher
+      pulling-text="Pull to refresh..."
+      on-refresh="refreshCustomer()">
+    </ion-refresher>
+    <ion-list id="customerList-list1">
+      <ion-item class="item-icon-right" ng-repeat="customer in customers" style="" ng-click="editCustomer(customer.id)">
+        <h2>{{customer.name}}</h2>
+        <p>{{customer.email}} | {{customer.mobile}}</p>
+        <i class="icon ion-edit icon-accessory"></i>
+        <ion-option-button class="button-assertive" ng-click="deleteCustomer(customer.id)">delete</ion-option-button>
+        <ion-option-button class="button-royal" ng-click="addCustomerContact(customer.id)">add contact</ion-option-button>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>
+````
+
+#### customerEditor.html
+Extend the customer editor file with ng-model and ng-click.
+
+````html
+<ion-view title="Customer Editor" id="page2" style="">
+  <ion-content padding="true" class="has-header">
+    <form id="customerEditor-form1" class="list">
+      <ion-list id="customerEditor-list2">
+        <label class="item item-input" id="customerEditor-input1">
+          <span class="input-label">Name</span>
+          <input placeholder="" type="text" ng-model="customer.name">
+        </label>
+        <label class="item item-input" id="customerEditor-input2">
+          <span class="input-label">Email</span>
+          <input placeholder="" type="email" ng-model="customer.email">
+        </label>
+        <label class="item item-input" id="customerEditor-input3">
+          <span class="input-label">Mobile</span>
+          <input placeholder="" type="tel" ng-model="customer.mobile">
+        </label>
+      </ion-list>
+      <button id="customerEditor-button1" class="button button-balanced  button-block" ng-click="editCustomer()">Save</button>
+    </form>
+  </ion-content>
+</ion-view>
+````
+
+## Ionic Cloud and View App
+1.  Use Ionic Lab to Upload the project to Ionic Cloud.
+2.  Use the Ionic View App to run the newly created mobile app on your smart-phone.
+
+## Apache Cordova Plugin - Contacts
+1.  Enable the "Contacts" Plugin in Ionic Lab.
+2.  Extend the Customer List Controller with the native contact functionality:
+    ````javascript
+          /* callback for ng-click 'addCustomerContact': */
+          $scope.addCustomerContact = function (customerId) {
+            CustomerFactory.show({id: customerId}).$promise.then(function (customer) {
+              var contact = navigator.contacts.create({'displayName': customer.name});
+              contact.name = new ContactName({'formatted': customer.name});
+              contact.phoneNumbers = new Array(new ContactField('mobile', customer.mobile, true));
+              contact.emails = new Array(new ContactField('work', customer.email, true));
+              contact.save(function (contact) {
+                alert("Save Success");
+              }, function (contactError) {
+                alert("Error = " + contactError.code);
+              });
+            });
+          };
+    ````
+
+3.  Re-upload the project to Ionic Cloud.
+3.  Use the Ionic View App to test the contact functionality.
 
 ## Footnotes
-<b id="f1">1:</b> HTTP access control (CORS): https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS [↩](#f1r)
+<b id="f1">1:</b> Unfortunately Ionic Lab is no longer supported, in future you will have to use the Ionic CLI: http://ionicframework.com/docs/cli/install.html | http://ionicframework.com/docs/guide/installation.html
+Ionic CLI requires the JavaScript runtime Node.js: https://nodejs.org  [↩](#f1r)
+
+<b id="f2">2:</b> HTTP access control (CORS): https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS [↩](#f2r)

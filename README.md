@@ -375,7 +375,7 @@ Extend the customer editor file with ng-model and ng-click.
 
 ## Ionic Cloud and View App
 1.  Use Ionic Lab to Upload the project to Ionic Cloud.
-2.  Use the Ionic View App to run the newly created mobile app on your smart-phone.
+2.  Use the Ionic View App to run the newly created mobile app on your Smartphone.
 
 ## Apache Cordova Plugin - Contacts
 1.  Enable the "Contacts" Plugin in Ionic Lab.

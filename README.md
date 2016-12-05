@@ -4,11 +4,13 @@
 1.  Register for an Ionic ID / Account: https://apps.ionic.io/signup
 2.  Download and install the Ionic LAB: http://lab.ionic.io/
 3.  Install the Ionic View App on your Android or iOS powered Smartphone or Tablet: http://view.ionic.io/
+
 ### Java EE
 1.  WildFly Application server.
     - Including the JDBC MySQL Driver installed and configured.
 2.  NetBeans IDE (EE Edition).
 3.  A running MySQL Database instance.
+
 ## Java EE (JPA and EJB) and JAX-RS (REST) API
 1.  Create a new Maven-based Web Project (running on WildFly)
 2.  Create a persistence.xml file containing your data source link, such as: java:/jboss/datasources/MySQLDS
@@ -128,6 +130,7 @@
         }
     }
     ````
+
 ## Project creation
 Project creation using Ionic Lab and Ionic Creator files...
 1.  Externalize the CSS code

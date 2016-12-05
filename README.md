@@ -110,7 +110,7 @@
       // generated code
     }
     ````
-7.  (optional for development purposes) Implement a CORS<sup>[1](#myfootnote1)</sup> filter as follows:
+7.  (optional for development purposes) Implement a CORS<sup id="f1r">[1](#f1)</sup> filter as follows:
     ````java
     @Provider
     public class CORSFilter implements ContainerResponseFilter{
@@ -161,9 +161,7 @@ Project creation using Ionic Lab and Ionic Creator files...
       });
     ```
 ## Controllers
-1.  Implement controllers<sup id="a1">[1](#f1)</sup>
+1.  Implement controllers
 
-<b id="f1">1</b> Footnote content here. [↩](#a1)
-    
-    
-<a name="myfootnote1">1</a>: Footnote content goes here
+## Footnotes
+<b id="f1">1:</b> HTTP access control (CORS): https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS [↩](#f1r)

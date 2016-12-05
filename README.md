@@ -1,5 +1,5 @@
 # Customer Mobile App Tutorial
-## Pre-requisites
+## Prerequisites
 ### Ionic (and Cordova)
 1.  Register for an Ionic ID / Account: https://apps.ionic.io/signup
 2.  Download and install the Ionic LAB (old<sup id="f1r">[1](#f1)</sup>): http://lab.ionic.io/old.html

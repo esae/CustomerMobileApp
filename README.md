@@ -5,6 +5,9 @@
 2.  Download and install the Ionic LAB: http://lab.ionic.io/
 3.  Install the Ionic View App on your Android or iOS powered Smartphone or Tablet: http://view.ionic.io/
 
+### API Development
+1.  (optional) Download and install Postman (for Windows you need Chrome): https://www.getpostman.com/
+
 ### Java EE
 1.  WildFly Application server.
     - Including the JDBC MySQL Driver installed and configured.
@@ -13,10 +16,12 @@
 
 ## Java EE (JPA and EJB) and JAX-RS (REST) API
 1.  Create a new Maven-based Web Project (running on WildFly)
+
 2.  Create a persistence.xml file containing your data source link, such as: 
     ````
     java:/jboss/datasources/MySQLDS
     ````
+    
 3.  Create an Customer Entity Class for storing customer data, such as:
     ````java
     @Entity
@@ -33,6 +38,7 @@
         // getters and setters
     }
     ````
+    
 4.  Create a CustomerEJB Class containing CRUD operations for the customer entity:
     ````java
     @Stateless
@@ -65,6 +71,7 @@
         }
     }
     ````
+    
 5.  Create a RESTful API by writing a CustomerEndpoint Class:
     ````java
     @Stateless
@@ -107,6 +114,7 @@
         
     }
     ````
+    
 6.  Use NetBeans to "Configure REST using Java EE 6 specification" to automatically generate an ApplicationConfig. Please define the application Path as follows.
     ````java
     @javax.ws.rs.ApplicationPath("api")
@@ -114,6 +122,7 @@
       // generated code
     }
     ````
+    
 7.  (optional for development purposes) Implement a CORS<sup id="f1r">[1](#f1)</sup> filter as follows:
     ````java
     @Provider
@@ -132,6 +141,21 @@
         }
     }
     ````
+    
+8.  Run the API on your local WildFly server for development.
+    - You may test your API with Postman: http://localhost:8080/CustomerMobileAPI-1.0/api/v1/customer
+    - There is also Cloud-based API version accessible under: http://api-andreasmartin.rhcloud.com/api/v1/customer
+    
+## Ionic App Prototyping
+We are going to use the Ionic Creator prototyping tool to create our development-ready HTML5 code.
+1.  Go to 
+http://ionic.io/products/creator
+    
+![](doc/img/2016-12-05_19h21_20.png)
+![](doc/img/2016-12-05_19h22_45.png)
+
+![](doc/img/2016-12-05_19h24_48.png)
+![](doc/img/2016-12-05_19h25_35.png)
 
 ## Project creation
 Project creation using Ionic Lab and Ionic Creator files...

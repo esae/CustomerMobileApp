@@ -13,7 +13,10 @@
 
 ## Java EE (JPA and EJB) and JAX-RS (REST) API
 1.  Create a new Maven-based Web Project (running on WildFly)
-2.  Create a persistence.xml file containing your data source link, such as: java:/jboss/datasources/MySQLDS
+2.  Create a persistence.xml file containing your data source link, such as: 
+    ````text
+    java:/jboss/datasources/MySQLDS
+    ````
 3.  Create an Customer Entity Class for storing customer data, such as:
     ````java
     @Entity
@@ -104,8 +107,7 @@
         
     }
     ````
-6.  Use NetBeans to "Configure REST using Java EE 6 specification" to automatically generate an ApplicationConfig.
-    Please define the application Path as follows:
+6.  Use NetBeans to "Configure REST using Java EE 6 specification" to automatically generate an ApplicationConfig. Please define the application Path as follows:
     ````java
     @javax.ws.rs.ApplicationPath("api")
     public class ApplicationConfig extends Application {

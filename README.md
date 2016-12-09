@@ -177,6 +177,7 @@ We are going to use the Ionic Creator prototyping tool to create our development
 
 ## Ionic App Development using AngularJS 1
 -   Open the Ionic Project in an IDE you prefer (NetBeans, IntelliJ, WebStorm, etc.)
+
 #### index.html
 1.  Add the Angular resource module which is not included by default. Open index.html and add a script tag to include angular-resource.min.js (right after ionic-bundle.js):
     ```html
@@ -249,9 +250,7 @@ We are going to use the Ionic Creator prototyping tool to create our development
           $scope.customers = CustomersFactory.query();
     
           /* callback for ng-click 'addCustomerContact': */
-          $scope.addCustomerContact = function (customerId) {
-            CustomerFactory.show({id: customerId}).$promise.then(function (customer) {/*...*/});
-          };
+          $scope.addCustomerContact = function (customerId) {/*...*/};
     
         }])
     ````
@@ -398,7 +397,7 @@ Extend the customer editor file with ng-model and ng-click.
     ````
 
 3.  Re-upload the project to Ionic Cloud.
-3.  Use the Ionic View App to test the contact functionality.
+4.  Use the Ionic View App to test the contact functionality.
 
 ## Footnotes
 <b id="f1">1:</b> Unfortunately Ionic Lab is no longer supported, in future you will have to use the Ionic CLI: http://ionicframework.com/docs/cli/install.html | http://ionicframework.com/docs/guide/installation.html
